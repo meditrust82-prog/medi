@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Builds
+dist/
+**/dist/
+client/build/
+
+# Environment variables
+.env
+**/.env
+!**/.env.example
+
+# Database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Platform / agent cruft
+.replit
+.local/
+.agents/
+.claude/
+.config/
+.planning/
+attached_assets/
+
+# Vercel
+.vercel/
+
+# Yarn
+.yarn/
+.pnp
+
+# Prisma
+.env.prisma
+
+# Uploads
+uploads/

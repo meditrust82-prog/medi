@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart
+Disallow: /compare
+Disallow: /track/
+Disallow: /render
+Disallow: /wishlist
+
+Sitemap: https://meditrustnepal.com/sitemap.xml
+LLMs: https://meditrustnepal.com/llms.txt
+
+# AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /

@@ -1,0 +1,16 @@
+{
+  "name": "Meditrust Nepal — Medical Equipment",
+  "short_name": "Meditrust",
+  "description": "Nepal's trusted supplier of surgical instruments, ICU equipment, patient monitors and more.",
+  "start_url": "/products",
+  "display": "standalone",
+  "background_color": "#103452",
+  "theme_color": "#103452",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/favicon-512.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["medical", "shopping", "health"],
+  "lang": "en-NP"
+}

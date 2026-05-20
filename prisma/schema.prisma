@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("AGENT")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  parentId  Int?
+  parent    Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  description String?
+  icon      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  name         String
+  slug         String?  @unique
+  description  String?
+  specifications String?
+  brand        String?
+  model        String?
+  department   String?
+  originCountry String?
+  certifications String?
+  warranty     String?
+  keyFeatures  String?
+  costPrice    Float?   @default(0)
+  price        Float?
+  quantity     Int       @default(0)
+  unit         String?   @default("PCS")
+  categoryId   Int
+  category     Category @relation(fields: [categoryId], references: [id])
+  videoUrl     String?
+  featured     Boolean  @default(false)
+  metaTitle    String?
+  metaDescription String?
+  metaKeywords String?
+  createdBy    Int
+  createdByUser User    @relation(fields: [createdBy], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  images       ProductImage[]
+  inquiries    Inquiry[]
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  path      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  hospital  String?
+  role      String?
+  content   String
+  rating    Int      @default(5)
+  image     String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiry {
+  id           Int      @id @default(autoincrement())
+  name         String
+  hospitalName String?  @map("hospital_name")
+  phone        String?
+  email        String
+  message      String?
+  productId    Int?     @map("product_id")
+  cartItems    String?  // JSON string of cart contents for multi-product quotes
+  status       String   @default("pending")
+  trackingId   String?  @unique @map("tracking_id")
+  deliveryStatus String? @default("pending") @map("delivery_status")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  lastTrackingUpdate DateTime? @map("last_tracking_update")
+
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  trackingEvents TrackingEvent[]
+}
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String?
+  location      String?
+  client        String?
+  category      String?
+  completedDate String?  @map("completed_date")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  galleryImages Gallery[]
+}
+
+model BlogPost {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  content   String?
+  excerpt   String?
+  image     String?
+  author    String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id           Int      @id @default(autoincrement())
+  name         String?
+  email        String
+  phone        String?
+  hospitalName String?
+  source       String   @default("catalog")
+  createdAt    DateTime @default(now())
+}
+
+model Gallery {
+  id        Int      @id @default(autoincrement())
+  title     String?
+  image     String
+  projectId Int?     @map("project_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model TrackingEvent {
+  id         Int      @id @default(autoincrement())
+  trackingId String   @map("tracking_id")
+  status     String
+  message    String?
+  timestamp  DateTime
+  inquiryId  Int?     @map("inquiry_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  inquiry    Inquiry? @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+
+  @@unique([trackingId, status, timestamp, message])
+  @@index([trackingId, timestamp])
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
